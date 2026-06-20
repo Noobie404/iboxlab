@@ -120,10 +120,10 @@ Controller sets `X-Cache: HIT|MISS` and `X-Fetch-Duration-Ms` headers.
 ## Booking flow
 
 1. Client searches → flights indexed in Redis by `flightId`
-2. Client POSTs booking with `flightId` (+ optional `flightSnapshot`)
+2. Client POSTs booking with `flightId` and `flightSnapshot` (both required)
 3. `FlightBookingValidator` loads flight from catalog cache
 4. If not found → **404** (search first or cache expired)
-5. If snapshot provided and fields differ → **400** with `mismatches[]`
+5. If snapshot fields differ from cache → **400** with `mismatches[]`
 6. Server stores authoritative snapshot and price from cache (not client tampering)
 
 **Idempotency:** `idempotencyKey` on POST returns the same booking on retry.

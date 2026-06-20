@@ -26,7 +26,7 @@ export class BookingsController {
   @ApiResponse({ status: 201, description: 'Booking confirmed' })
   @ApiResponse({
     status: 400,
-    description: 'Invalid or mismatched flight snapshot',
+    description: 'Missing, invalid, or mismatched flight snapshot',
   })
   @ApiResponse({ status: 404, description: 'Flight not found in search cache' })
   @ApiResponse({

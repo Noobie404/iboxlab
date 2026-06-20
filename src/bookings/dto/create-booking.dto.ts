@@ -17,15 +17,15 @@ export class CreateBookingDto {
   @IsNotEmpty()
   flightId: string;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: FlightSnapshotDto,
     description:
-      'Optional. If omitted, the snapshot is taken from your latest search result for this flightId.',
+      'Required. Must match the same flight from your latest search response.',
   })
-  @IsOptional()
+  @IsNotEmpty()
   @ValidateNested()
   @Type(() => FlightSnapshotDto)
-  flightSnapshot?: FlightSnapshotDto;
+  flightSnapshot: FlightSnapshotDto;
 
   @ApiProperty({ type: [PassengerDto] })
   @IsArray()

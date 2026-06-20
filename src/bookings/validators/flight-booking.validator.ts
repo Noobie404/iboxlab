@@ -22,14 +22,12 @@ export class FlightBookingValidator {
       );
     }
 
-    const mismatches = dto.flightSnapshot
-      ? this.findMismatches(dto.flightSnapshot, flight)
-      : [];
+    const mismatches = this.findMismatches(dto.flightSnapshot, flight);
 
     if (mismatches.length > 0) {
       throw new BadRequestException({
         message:
-          'Flight snapshot does not match search result. Copy flightId and flightSnapshot from the same flight in your search response, or omit flightSnapshot to use the cached search result.',
+          'Flight snapshot does not match search result. Copy flightId and flightSnapshot from the same flight in your search response.',
         mismatches,
         expectedFlightId: flight.flightId,
       });

@@ -54,25 +54,7 @@ For DAC→DXB on `2026-07-01`, expect **6 deduplicated flights** (e.g. EK585 at 
 
 ### Create booking
 
-**Search first** — bookings validate against the search cache. If results expire, search again.
-
-Minimal payload (`flightSnapshot` optional — taken from cache):
-
-```bash
-curl -X POST http://localhost:3000/api/bookings \
-  -H "Content-Type: application/json" \
-  -d '{
-    "flightId": "AA101-2026-07-01T08:00:00.000Z",
-    "passengers": [{
-      "firstName": "John",
-      "lastName": "Doe",
-      "passport": "A12345678",
-      "dateOfBirth": "1990-05-15"
-    }]
-  }'
-```
-
-With explicit snapshot (must match the same search result — copy from `flights[]`, not Swagger placeholders):
+**Search first** — bookings validate against the search cache. Copy `flightId` and `flightSnapshot` from the same item in `flights[]`. If results expire, search again.
 
 ```bash
 curl -X POST http://localhost:3000/api/bookings \
@@ -98,6 +80,8 @@ curl -X POST http://localhost:3000/api/bookings \
     }]
   }'
 ```
+
+The snapshot must match the cached search result exactly (server rejects tampered prices or mismatched fields with **400**).
 
 ### Get booking by reference
 

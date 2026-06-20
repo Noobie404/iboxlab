@@ -179,7 +179,7 @@ describe('Flights & Bookings (e2e)', () => {
       };
     });
 
-    it('POST /api/bookings creates a booking without flightSnapshot', async () => {
+    it('POST /api/bookings returns 400 when flightSnapshot is missing', async () => {
       const res = await request(app.getHttpServer())
         .post('/api/bookings')
         .send({
@@ -192,18 +192,13 @@ describe('Flights & Bookings (e2e)', () => {
               dateOfBirth: '1991-01-01',
             },
           ],
-          idempotencyKey: 'e2e-no-snapshot-key',
         })
-        .expect(201);
+        .expect(400);
 
-      expect(res.body.success).toBe(true);
-      expect(res.body.data.reference).toMatch(/^BK-[A-Z0-9]{16}$/);
-      expect(res.body.data.totalPrice).toBe(399);
-      expect(res.body.data.flightSnapshot.price.amount).toBe(399);
-      expect(res.body.data.status).toBe('confirmed');
+      expect(res.body.success).toBe(false);
     });
 
-    it('POST /api/bookings creates a booking with explicit snapshot', async () => {
+    it('POST /api/bookings creates a booking with flightSnapshot', async () => {
       const res = await request(app.getHttpServer())
         .post('/api/bookings')
         .send({
@@ -231,6 +226,7 @@ describe('Flights & Bookings (e2e)', () => {
         .post('/api/bookings')
         .send({
           flightId,
+          flightSnapshot,
           passengers: [
             {
               firstName: 'Jane',
@@ -292,6 +288,7 @@ describe('Flights & Bookings (e2e)', () => {
     it('POST /api/bookings returns 409 for duplicate passenger+flight', async () => {
       const payload = {
         flightId,
+        flightSnapshot,
         passengers: [
           {
             firstName: 'Dup',
@@ -319,6 +316,17 @@ describe('Flights & Bookings (e2e)', () => {
         .post('/api/bookings')
         .send({
           flightId: 'ZZ999-2026-08-01T10:00:00.000Z',
+          flightSnapshot: {
+            flightNo: 'ZZ999',
+            carrier: 'ZZ',
+            origin: 'DAC',
+            destination: 'DXB',
+            departAt: '2026-08-01T10:00:00.000Z',
+            arriveAt: '2026-08-01T14:00:00.000Z',
+            durationMinutes: 240,
+            stops: 0,
+            price: { amount: 999, currency: 'USD' },
+          },
           passengers: [
             {
               firstName: 'Ghost',
@@ -357,6 +365,7 @@ describe('Flights & Bookings (e2e)', () => {
     it('POST /api/bookings returns same reference for idempotency key', async () => {
       const payload = {
         flightId,
+        flightSnapshot,
         passengers: [
           {
             firstName: 'Idem',

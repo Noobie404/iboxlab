@@ -111,7 +111,7 @@ Start both services and check `MONGODB_URI` / `REDIS_URL`.
 Search first so the flight is in cache. Re-search if cache TTL expired.
 
 **Booking returns 400 on snapshot**  
-Copy `flightId` and `flightSnapshot` from the same search result, or omit `flightSnapshot` entirely.
+Copy `flightId` and `flightSnapshot` from the same search result. Both fields are required; the snapshot must match the cached flight.
 
 **Port 3000 already in use**  
 Stop Docker or another `start:dev` instance, or change `PORT` in `.env` and update `FLIGHT_PROVIDERS` URLs.

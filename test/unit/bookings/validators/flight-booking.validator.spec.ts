@@ -69,17 +69,6 @@ describe('FlightBookingValidator', () => {
     );
   });
 
-  it('returns flight when flightSnapshot is omitted', async () => {
-    flightsService.getFlightById.mockResolvedValue(flight);
-
-    const result = await validator.validateAndResolve({
-      flightId: flight.flightId,
-      passengers: dto.passengers,
-    });
-
-    expect(result).toEqual(flight);
-  });
-
   it('throws BadRequestException when snapshot does not match cached flight', async () => {
     flightsService.getFlightById.mockResolvedValue(flight);
 
